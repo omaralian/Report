@@ -30,7 +30,7 @@ namespace Report.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int(1)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()

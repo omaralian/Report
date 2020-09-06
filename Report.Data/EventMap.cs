@@ -29,7 +29,6 @@ namespace Report.Data
 
             entityTypeBuilder
                 .Property(e => e.Status)
-                .HasColumnType("int(1)")
                 .IsRequired();
         }
     }
