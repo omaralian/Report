@@ -9,6 +9,6 @@ namespace Report.Data
         public string Title { get; set; }
         public DateTime DateTime { get; set; }
         public EventStatus Status { get; set; }
-        public ICollection<Invitation> Invitations { get; set; }
+        public virtual ICollection<Invitation> Invitations { get; set; }
     }
 }

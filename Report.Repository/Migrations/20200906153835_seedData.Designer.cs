@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Report.Repository;
 
 namespace Report.Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200906153835_seedData")]
+    partial class seedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,41 +41,41 @@ namespace Report.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            DateTime = new DateTime(2020, 9, 6, 20, 31, 37, 588, DateTimeKind.Local).AddTicks(5825),
+                            DateTime = new DateTime(2020, 9, 6, 19, 38, 35, 28, DateTimeKind.Local).AddTicks(3242),
                             Status = 3,
                             Title = "Yas Water World"
                         },
                         new
                         {
                             Id = 2,
-                            DateTime = new DateTime(2020, 9, 6, 20, 31, 37, 589, DateTimeKind.Local).AddTicks(8406),
+                            DateTime = new DateTime(2020, 9, 6, 19, 38, 35, 29, DateTimeKind.Local).AddTicks(6767),
                             Status = 5,
                             Title = "Abu Dhabi International Hunting & Equestrian Exhibition"
                         },
                         new
                         {
                             Id = 3,
-                            DateTime = new DateTime(2020, 9, 6, 20, 31, 37, 589, DateTimeKind.Local).AddTicks(8448),
+                            DateTime = new DateTime(2020, 9, 6, 19, 38, 35, 29, DateTimeKind.Local).AddTicks(6813),
                             Status = 6,
                             Title = "Abu Dhabi International Book Fair"
                         },
                         new
                         {
                             Id = 4,
-                            DateTime = new DateTime(2020, 9, 6, 20, 31, 37, 589, DateTimeKind.Local).AddTicks(8452),
+                            DateTime = new DateTime(2020, 9, 6, 19, 38, 35, 29, DateTimeKind.Local).AddTicks(6817),
                             Status = 6,
                             Title = "Kayaking Around The Museum"
                         },
                         new
                         {
                             Id = 5,
-                            DateTime = new DateTime(2020, 9, 6, 20, 31, 37, 589, DateTimeKind.Local).AddTicks(8454),
+                            DateTime = new DateTime(2020, 9, 6, 19, 38, 35, 29, DateTimeKind.Local).AddTicks(6819),
                             Status = 2,
                             Title = "Hypercars: Evolution of Uniqueness"
                         });

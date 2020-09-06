@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Report.Repository;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Report.API
 {
@@ -30,7 +32,11 @@ namespace Report.API
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
-            services.AddControllers();
+            services.AddScoped<IInvitationRepository, InvitationRepository>();
+
+            services.AddControllers().AddNewtonsoftJson(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

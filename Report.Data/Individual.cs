@@ -9,6 +9,6 @@ namespace Report.Data
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<Invitation> Invitations { get; set; }
+        public virtual ICollection<Invitation> Invitations { get; set; }
     }
 }

@@ -7,8 +7,8 @@ namespace Report.Data
     public class Invitation : BaseEntity
     {
         public int EventId { get; set; }
-        public Event Event { get; set; }
+        public virtual Event Event { get; set; }
         public int IndividualId { get; set; }
-        public Individual Individual { get; set; }
+        public virtual Individual Individual { get; set; }
     }
 }
