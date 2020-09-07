@@ -14,8 +14,8 @@ namespace Report.Repository
         }
 
         public DbSet<Event> Events { get; set; }
-        public DbSet<Individual> Individual { get; set; }
-        public DbSet<Invitation> Invitation { get; set; }
+        public DbSet<Individual> Individuals { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

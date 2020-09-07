@@ -19,28 +19,64 @@ namespace Report.Repository
 
         public async Task<List<Invitation>> GetAllAsync()
         {
-            return await _context.Invitation.ToListAsync();
+            return await _context.Invitations.ToListAsync();
         }
 
         
-        /*
-        public async Task<List<Invitation>> Test()
+        public async Task<IEnumerable<dynamic>> ReportAsync2()
         {
-            var anonymousObjResult = _context.Invitation.Select(c => new { c.EventId, c.IndividualId });
-            anonymousObjResult.AllAsync();
-            foreach (var obj in anonymousObjResult)
-            {
-                Console.Write(obj.EventId);
-            }
-        }
-        */
-        
+            IQueryable<dynamic> query = _context.Invitations
+                .Include(i => i.Event)
+                .Select(i => new
+                {
+                    EventId = i.EventId,
+                    IndividualId = i.IndividualId,
+                    EventTitle = i.Event.Title
+                });
 
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<dynamic>> ReportAsync()
+        {
+            string sql =
+                "SELECT " +
+                "Invitations.EventId, " +
+                "Invitations.IndividualId, " +
+                "Events.Title, " +
+                "Events.DateTime, " +
+                "Events.Status, " +
+                "Individuals.LastName " +
+                "FROM Invitations " +
+                "LEFT JOIN Events ON Invitations.EventId = Events.Id " +
+                "LEFT JOIN Individuals ON Invitations.IndividualId = Individuals.Id " +
+                "";
+
+            IQueryable<dynamic> query = _context.Invitations.FromSqlRaw(sql).Select(i => new { i.Event, i.Individual });
+
+            return await query.ToListAsync();
+        }
+
+        /*
         public async Task<List<Invitation>> ReportAsync()
         {
-            string sql = @"SELECT [EventId], [IndividualId] FROM [Invitation]";
-            var result = await _context.Invitation.FromSqlRaw(sql).ToListAsync();
+            string sql =
+                "SELECT " +
+                "Invitations.EventId, " +
+                "Invitations.IndividualId, " +
+                "Events.Title, " +
+                "Events.DateTime, " +
+                "Events.Status, " +
+                "Individuals.FirstName, " +
+                "Individuals.LastName " +
+                "FROM Invitations " +
+                "LEFT JOIN Events ON Invitations.EventId = Events.Id " +
+                "LEFT JOIN Individuals ON Invitations.IndividualId = Individuals.Id " +
+                "";
+            
+            var result = await _context.Invitations.FromSqlRaw(sql).ToListAsync();
             return result;
         }
+        */
     }
 }

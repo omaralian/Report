@@ -10,6 +10,6 @@ namespace Report.Repository
     public interface IInvitationRepository
     {
         Task<List<Invitation>> GetAllAsync();
-        Task<List<Invitation>> ReportAsync();
+        Task<IEnumerable<dynamic>> ReportAsync();
     }
 }
