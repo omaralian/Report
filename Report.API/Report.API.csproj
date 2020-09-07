@@ -12,6 +12,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Report.Repository\Report.Repository.csproj" />
+    <ProjectReference Include="..\Report.Service\Report.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ReportStaticFiles\" />
   </ItemGroup>
 
 </Project>

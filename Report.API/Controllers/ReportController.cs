@@ -1,27 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Report.Repository;
+using Report.Service;
 
 namespace Report.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ReportController : ControllerBase
+    public class ReportController : Controller
     {
-        private IInvitationRepository _invitationRepository;
-        public ReportController(IInvitationRepository invitationRepository)
+        private IInvitationService _invitationService;
+        public ReportController(IInvitationService invitationService)
         {
-            _invitationRepository = invitationRepository;
+            _invitationService = invitationService;
         }
 
         [HttpGet("invitation")]
-        public async Task<IActionResult> Invitation()
+        public IActionResult Invitation(string? type)
         {
-            var result = await _invitationRepository.ReportAsync();
-            return Ok(result);
+            if (type.IsNullOrEmpty())
+                type = "html";
+
+            string filename = string.Format(@"{0}", Guid.NewGuid().ToString());
+
+            var tasks = Task.Run(() => _invitationService.InvitationReportAsync(filename, type));
+
+            string link = "ReportStaticFiles/" + filename + "." + type;
+            return Ok(link);
         }
     }
 }

@@ -1,82 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Report.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Threading;
 
 namespace Report.Repository
 {
     public class InvitationRepository : IInvitationRepository
     {
-        private ApplicationDbContext _context;
-        public InvitationRepository(ApplicationDbContext context)
+        private readonly string _connString;
+        public InvitationRepository(IConfiguration configuration)
         {
-            this._context = context;
+            _connString = configuration.GetConnectionString("Default");
         }
 
-        public async Task<List<Invitation>> GetAllAsync()
+        public async Task<DataTable> InvitationReportAsync()
         {
-            return await _context.Invitations.ToListAsync();
+            DataTable dataTable = new DataTable("InvitationReport");
+
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                string cmdText = "SELECT * FROM Events";
+                SqlCommand cmd = new SqlCommand(cmdText, conn);
+                SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
+                dataTable.Load(dataReader);
+            }
+
+            return dataTable;
         }
-
-        
-        public async Task<IEnumerable<dynamic>> ReportAsync2()
-        {
-            IQueryable<dynamic> query = _context.Invitations
-                .Include(i => i.Event)
-                .Select(i => new
-                {
-                    EventId = i.EventId,
-                    IndividualId = i.IndividualId,
-                    EventTitle = i.Event.Title
-                });
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<IEnumerable<dynamic>> ReportAsync()
-        {
-            string sql =
-                "SELECT " +
-                "Invitations.EventId, " +
-                "Invitations.IndividualId, " +
-                "Events.Title, " +
-                "Events.DateTime, " +
-                "Events.Status, " +
-                "Individuals.LastName " +
-                "FROM Invitations " +
-                "LEFT JOIN Events ON Invitations.EventId = Events.Id " +
-                "LEFT JOIN Individuals ON Invitations.IndividualId = Individuals.Id " +
-                "";
-
-            IQueryable<dynamic> query = _context.Invitations.FromSqlRaw(sql).Select(i => new { i.Event, i.Individual });
-
-            return await query.ToListAsync();
-        }
-
-        /*
-        public async Task<List<Invitation>> ReportAsync()
-        {
-            string sql =
-                "SELECT " +
-                "Invitations.EventId, " +
-                "Invitations.IndividualId, " +
-                "Events.Title, " +
-                "Events.DateTime, " +
-                "Events.Status, " +
-                "Individuals.FirstName, " +
-                "Individuals.LastName " +
-                "FROM Invitations " +
-                "LEFT JOIN Events ON Invitations.EventId = Events.Id " +
-                "LEFT JOIN Individuals ON Invitations.IndividualId = Individuals.Id " +
-                "";
-            
-            var result = await _context.Invitations.FromSqlRaw(sql).ToListAsync();
-            return result;
-        }
-        */
     }
 }

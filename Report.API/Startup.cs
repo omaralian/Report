@@ -14,6 +14,9 @@ using Microsoft.Extensions.Logging;
 using Report.Repository;
 using Newtonsoft.Json;
 using System.Text.Json;
+using Report.Service;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Report.API
 {
@@ -29,10 +32,11 @@ namespace Report.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            //services.AddDbContext<ApplicationDbContext>(
+                //options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddScoped<IInvitationRepository, InvitationRepository>();
+            services.AddScoped<IInvitationService, InvitationService>();
 
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -48,6 +52,14 @@ namespace Report.API
             }
 
             app.UseHttpsRedirection();
+
+            // static Folder
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "ReportStaticFiles")),
+                RequestPath = "/ReportStaticFiles"
+            });
 
             app.UseRouting();
 
