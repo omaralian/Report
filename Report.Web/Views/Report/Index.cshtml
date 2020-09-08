@@ -1,0 +1,37 @@
+﻿@model List<Report.Model.ReportModel>
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h1 class="display-4">Reports</h1>
+<p>This may take a while, Please keep refreshing page.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                Link
+            </th>
+            <th scope="col">
+                Created at
+            </th>
+            <th scope="col">
+                Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>
+                    <a href="@item.Link">
+                        @item.Name
+                    </a>
+                </th>
+                <td>@item.CreatedAt</td>
+                <td scope="row">@item.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -12,17 +12,34 @@ namespace Report.Service
     public class InvitationService : IInvitationService
     {
         private readonly IInvitationRepository _invitationRepository;
-        public InvitationService(IInvitationRepository invitationRepository)
+        private readonly IReportRepository _reportRepository;
+        public InvitationService(IInvitationRepository invitationRepository, IReportRepository reportRepository)
         {
             _invitationRepository = invitationRepository;
+            _reportRepository = reportRepository;
         }
 
-        public async Task<string> InvitationReportAsync(string filename, string type)
+        public async Task<string> InvitationReport(string type)
         {
-            Thread.Sleep(10000);
-            DataTable dataTable = await _invitationRepository.InvitationReportAsync();
-            string htmlString = DataTableToHTML(dataTable);
-            CreateHtmlFile(htmlString, filename);
+            string filename = string.Format(@"{0}", Guid.NewGuid().ToString());
+
+            bool IsInserted = await _reportRepository.Insert(filename, type, "InProgress");
+            if (IsInserted)
+                Console.WriteLine("IsInserted: " + IsInserted);
+
+            Task<DataTable> createReportTask = Task<DataTable>.Run(() =>
+                _invitationRepository.InvitationReportAsync()
+            );
+
+            var createReportAwaiter =  createReportTask.GetAwaiter();
+
+            createReportAwaiter.OnCompleted(() => {
+                DataTable dataTable = createReportAwaiter.GetResult();
+                string htmlString = DataTableToHTML(dataTable);
+                CreateHtmlFile(htmlString, filename);
+                _reportRepository.UpdateStatus(filename, "Ready");
+            });
+            
             return filename;
         }
 

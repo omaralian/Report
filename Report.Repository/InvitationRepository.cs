@@ -22,6 +22,7 @@ namespace Report.Repository
 
         public async Task<DataTable> InvitationReportAsync()
         {
+            await Task.Delay(20000);
             DataTable dataTable = new DataTable("InvitationReport");
 
             using (SqlConnection conn = new SqlConnection(_connString))

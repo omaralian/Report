@@ -8,6 +8,6 @@ namespace Report.Service
 {
     public interface IInvitationService
     {
-        public Task<string> InvitationReportAsync(string filename, string type);
+        public Task<string> InvitationReport(string type);
     }
 }

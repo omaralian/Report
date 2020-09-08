@@ -21,14 +21,12 @@ namespace Report.API.Controllers
         }
 
         [HttpGet("invitation")]
-        public IActionResult Invitation(string? type)
+        public async Task<IActionResult> Invitation(string type)
         {
             if (type.IsNullOrEmpty())
                 type = "html";
 
-            string filename = string.Format(@"{0}", Guid.NewGuid().ToString());
-
-            var tasks = Task.Run(() => _invitationService.InvitationReportAsync(filename, type));
+            string filename = await _invitationService.InvitationReport(type);
 
             string link = "ReportStaticFiles/" + filename + "." + type;
             return Ok(link);
