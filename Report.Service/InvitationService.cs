@@ -48,9 +48,16 @@ namespace Report.Service
             StringBuilder strHTMLBuilder = new StringBuilder();
             strHTMLBuilder.Append("<html >");
             strHTMLBuilder.Append("<head>");
+            strHTMLBuilder.Append("<link rel='stylesheet' href='/lib/bootstrap/dist/css/bootstrap.min.css'/>");
+            strHTMLBuilder.Append("<link rel='stylesheet' href='/css/report.css'/>");
             strHTMLBuilder.Append("</head>");
             strHTMLBuilder.Append("<body>");
-            strHTMLBuilder.Append("<table border='1px' cellpadding='1' cellspacing='1' bgcolor='lightyellow' style='font-family:Garamond; font-size:smaller'>");
+
+            strHTMLBuilder.Append("<div class='noprint p-4'>");
+            strHTMLBuilder.Append("<button class='btn btn-success' id='exportToCsv'>CSV</button>");
+            strHTMLBuilder.Append("</div>");
+
+            strHTMLBuilder.Append("<table width='100%' class='table table-bordered'");
 
             strHTMLBuilder.Append("<tr >");
             foreach (DataColumn myColumn in dt.Columns)
@@ -77,8 +84,13 @@ namespace Report.Service
                 strHTMLBuilder.Append("</tr>");
             }
 
-            //Close tags.  
+            // Close tags.  
             strHTMLBuilder.Append("</table>");
+            // JQuery
+            strHTMLBuilder.Append("<script src='/lib/jquery/dist/jquery.min.js'></script>");
+            strHTMLBuilder.Append("<script src='/lib/table2csv/table2csv.min.js'></script>");
+            strHTMLBuilder.Append("<script src='/lib/table2csv/function.js'></script>");
+
             strHTMLBuilder.Append("</body>");
             strHTMLBuilder.Append("</html>");
 
