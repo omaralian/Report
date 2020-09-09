@@ -20,15 +20,55 @@ namespace Report.Repository
             _connString = configuration.GetConnectionString("Default");
         }
 
-        public async Task<DataTable> InvitationReportAsync()
+        public async Task<DataTable> InvitationReportAsync(List<String> columns)
         {
-            // await Task.Delay(20000);
+            await Task.Delay(20000);
+
+            string cmdTextColumns = "";
+
+            if (columns.Contains("EventId"))
+            {
+                cmdTextColumns += "Events.Id AS EventId, ";
+            }
+
+            if (columns.Contains("EventTitle"))
+            {
+                cmdTextColumns += "Events.Title AS EventTitle, ";
+            }
+
+            if (columns.Contains("EventStatus"))
+            {
+                cmdTextColumns += "Events.Status AS EventStatus, ";
+            }
+
+            if (columns.Contains("EventDateTime"))
+            {
+                cmdTextColumns += "Events.DateTime AS EventDateTime, ";
+            }
+
+            if (columns.Contains("IndividualName"))
+            {
+                cmdTextColumns += "CONCAT(Individuals.FirstName, ' ', Individuals.LastName) AS IndividualName, ";
+            }
+
+            cmdTextColumns = cmdTextColumns.Substring(0, cmdTextColumns.Length - 2) + " ";
+
+            string cmdText =
+                    "" +
+                    "SELECT " +
+                    cmdTextColumns +
+                    "FROM " +
+                    "Invitations " +
+                    "LEFT JOIN Events ON Invitations.EventId = Events.Id " +
+                    "LEFT JOIN Individuals ON Invitations.IndividualId = Individuals.Id " +
+                    "ORDER BY Events.Id ASC " +
+                    "";
+
             DataTable dataTable = new DataTable("InvitationReport");
 
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                string cmdText = "SELECT * FROM Events";
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
                 dataTable.Load(dataReader);

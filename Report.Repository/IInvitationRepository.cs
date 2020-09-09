@@ -9,6 +9,6 @@ namespace Report.Repository
 {
     public interface IInvitationRepository
     {
-        public Task<DataTable> InvitationReportAsync();
+        public Task<DataTable> InvitationReportAsync(List<String> columns);
     }
 }

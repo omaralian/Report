@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Report.Service;
@@ -38,13 +39,11 @@ namespace Report.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> CreateReport(string? type)
+        [HttpPost]
+        public async Task<IActionResult> CreateReport(List<String> columns)
         {
-            if (type.IsNullOrEmpty())
-                type = "html";
-
-            await _invitationService.InvitationReport(type);
-
+            // return Ok(columns);
+            await _invitationService.InvitationReport(columns);
             return RedirectToAction("Index", "Report");
         }
     }

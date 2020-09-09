@@ -19,16 +19,16 @@ namespace Report.Service
             _reportRepository = reportRepository;
         }
 
-        public async Task<string> InvitationReport(string type)
+        public async Task<string> InvitationReport(List<String> columns)
         {
             string filename = string.Format(@"{0}", Guid.NewGuid().ToString());
 
-            bool IsInserted = await _reportRepository.Insert(filename, type, "InProgress");
+            bool IsInserted = await _reportRepository.Insert(filename, "html", "InProgress");
             if (IsInserted)
                 Console.WriteLine("IsInserted: " + IsInserted);
 
             Task<DataTable> createReportTask = Task<DataTable>.Run(() =>
-                _invitationRepository.InvitationReportAsync()
+                _invitationRepository.InvitationReportAsync(columns)
             );
 
             var createReportAwaiter =  createReportTask.GetAwaiter();
